@@ -38,7 +38,6 @@ class Game
       puts 'Random answer selected'.colorize(:white)
     elsif Dir.exist?('saved_games')
       load
-      puts "#{'Saved game '.colorize(:white)}#{@load_name.colorize(:magenta)}#{' loaded'.colorize(:white)}"
       display
     else
       puts 'There are no saved games, just start a new one you lazy butt-hole'.colorize(:red)
@@ -73,10 +72,15 @@ class Game
                                         .colorize(:white)}"
       @load_name = gets.chomp
     end
-    return if @load_name == 'cancel'
+    if @load_name == 'cancel'
+      puts "Ok, starting new game...".colorize(:white)
+      Dir.chdir('..')
+      return
+    end
 
     loaded_string = File.read("#{@load_name}.yaml")
     loaded_status = YAML.load(loaded_string)
+    puts "#{'Saved game '.colorize(:white)}#{@load_name.colorize(:magenta)}#{' loaded'.colorize(:white)}"
     @answer = loaded_status[:answer]
     @to_display = loaded_status[:to_display]
     @guessed = loaded_status[:guessed]
